@@ -103,19 +103,23 @@ Route::middleware(['auth', \App\Http\Middleware\CheckRole::class.':admin'])->gro
         return view('admin.dashboard');
     })->name('admin.dashboard');
     
-    // Role Management
-    Route::resource('roles', RoleController::class);
-    
     // User Management
     Route::get('/users', [ProfileController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [ProfileController::class, 'create'])->name('users.create');
+    Route::post('/users', [ProfileController::class, 'store'])->name('users.store');
     Route::get('/users/{user}', [ProfileController::class, 'show'])->name('users.show');
+    Route::get('/users/{user}/edit', [ProfileController::class, 'edit'])->name('users.edit');
     Route::put('/users/{user}', [ProfileController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [ProfileController::class, 'destroy'])->name('users.destroy');
+    
+    // Role Management
+    Route::resource('roles', RoleController::class);
     
     // System Settings
     Route::get('/settings', function () {
         return view('admin.settings');
     })->name('settings');
+    Route::put('/settings', [ProfileController::class, 'updateSettings'])->name('settings.update');
 });
 
 // Admin routes

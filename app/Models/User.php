@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -59,11 +60,27 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Get the permissions that belong to the user.
+     */
+    public function permissions()
+    {
+        return $this->roles->flatMap->permissions->unique('id');
+    }
+
+    /**
      * Check if the user has a specific role.
      */
     public function hasRole(string $role): bool
     {
-        return $this->roles()->where('slug', $role)->exists();
+        return $this->roles->contains('slug', $role);
+    }
+
+    /**
+     * Check if the user has a specific permission.
+     */
+    public function hasPermission(string $permission): bool
+    {
+        return $this->permissions()->contains('slug', $permission);
     }
 
     /**
@@ -71,7 +88,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasAnyRole(array $roles): bool
     {
-        return $this->roles()->whereIn('slug', $roles)->exists();
+        return $this->roles->whereIn('slug', $roles)->count() > 0;
     }
 
     /**
@@ -79,7 +96,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasAllRoles(array $roles): bool
     {
-        return $this->roles()->whereIn('slug', $roles)->count() === count($roles);
+        return $this->roles->whereIn('slug', $roles)->count() === count($roles);
     }
 
     public function orders()
