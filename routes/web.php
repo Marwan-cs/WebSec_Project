@@ -57,12 +57,32 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Role Management Routes
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
-    Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
-    Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
-    Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('roles.edit');
-    Route::put('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
-    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
-    Route::post('/users/{user}/roles', [RoleController::class, 'assignRole'])->name('users.roles.assign');
+Route::group(['middleware' => ['web', 'auth']], function () {
+    Route::get('/roles', [RoleController::class, 'index'])
+        ->middleware(\App\Http\Middleware\CheckRole::class.':admin')
+        ->name('roles.index');
+    
+    Route::get('/roles/create', [RoleController::class, 'create'])
+        ->middleware(\App\Http\Middleware\CheckRole::class.':admin')
+        ->name('roles.create');
+    
+    Route::post('/roles', [RoleController::class, 'store'])
+        ->middleware(\App\Http\Middleware\CheckRole::class.':admin')
+        ->name('roles.store');
+    
+    Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])
+        ->middleware(\App\Http\Middleware\CheckRole::class.':admin')
+        ->name('roles.edit');
+    
+    Route::put('/roles/{role}', [RoleController::class, 'update'])
+        ->middleware(\App\Http\Middleware\CheckRole::class.':admin')
+        ->name('roles.update');
+    
+    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])
+        ->middleware(\App\Http\Middleware\CheckRole::class.':admin')
+        ->name('roles.destroy');
+    
+    Route::post('/users/{user}/roles', [RoleController::class, 'assignRole'])
+        ->middleware(\App\Http\Middleware\CheckRole::class.':admin')
+        ->name('users.roles.assign');
 });

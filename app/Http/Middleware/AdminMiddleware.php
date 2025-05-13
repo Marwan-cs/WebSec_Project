@@ -6,23 +6,18 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckRole
+class AdminMiddleware
 {
     /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @param  string  ...$roles
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, ...$roles)
+    public function handle(Request $request, Closure $next)
     {
-        if (!$request->user()) {
-            return redirect()->route('login');
-        }
-
-        if (!$request->user()->hasAnyRole($roles)) {
+        if (!$request->user() || !$request->user()->hasRole('admin')) {
             abort(403, 'Unauthorized action.');
         }
 
