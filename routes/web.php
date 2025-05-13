@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SocialiteController;
+use App\Http\Controllers\RoleController;
 
 // Home Page
 Route::get('/', function () {
@@ -53,4 +54,15 @@ Route::get('/auth/{provider}/callback', [SocialiteController::class, 'handleProv
 // Account Management Routes
 Route::middleware(['auth'])->group(function () {
     Route::delete('/account/delete', [AuthController::class, 'deleteAccount'])->name('account.delete');
+});
+
+// Role Management Routes
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+    Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
+    Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
+    Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('roles.edit');
+    Route::put('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
+    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
+    Route::post('/users/{user}/roles', [RoleController::class, 'assignRole'])->name('users.roles.assign');
 });
