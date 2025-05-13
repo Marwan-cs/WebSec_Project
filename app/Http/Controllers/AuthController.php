@@ -14,7 +14,7 @@ class AuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('users.login');
+        return view('auth.login');
     }
 
     public function login(Request $request)
@@ -43,7 +43,7 @@ class AuthController extends Controller
 
     public function showRegisterForm()
     {
-        return view('users.register');
+        return view('auth.register');
     }
 
     public function register(Request $request)
@@ -78,12 +78,12 @@ class AuthController extends Controller
 
     public function showProfile()
     {
-        return view('users.profile');
+        return view('auth.profile');
     }
 
     public function showVerifyEmail()
     {
-        return view('users.verify-email');
+        return view('auth.verify-email');
     }
 
     public function resendVerificationEmail(Request $request)
@@ -117,7 +117,7 @@ class AuthController extends Controller
 
     public function showForgotPasswordForm()
     {
-        return view('users.forgot-password');
+        return view('auth.forgot-password');
     }
 
     public function sendResetLinkEmail(Request $request)
@@ -135,7 +135,7 @@ class AuthController extends Controller
 
     public function showResetPasswordForm($token)
     {
-        return view('users.reset-password', ['token' => $token]);
+        return view('auth.reset-password', ['token' => $token]);
     }
 
     public function resetPassword(Request $request)

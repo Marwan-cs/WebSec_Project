@@ -60,6 +60,7 @@ Route::middleware(['auth'])->group(function () {
     
     // Profile Management
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/account/delete', [AuthController::class, 'deleteAccount'])->name('account.delete');
     
@@ -118,7 +119,7 @@ Route::middleware(['auth', \App\Http\Middleware\CheckRole::class.':admin'])->gro
 });
 
 // Admin routes
-Route::middleware(['auth', 'checkrole:admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', \App\Http\Middleware\CheckRole::class.':admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
@@ -128,7 +129,7 @@ Route::middleware(['auth', 'checkrole:admin'])->prefix('admin')->name('admin.')-
 });
 
 // Manager routes
-Route::middleware(['auth', 'checkrole:manager'])->prefix('manager')->name('manager.')->group(function () {
+Route::middleware(['auth', \App\Http\Middleware\CheckRole::class.':manager'])->prefix('manager')->name('manager.')->group(function () {
     Route::get('/dashboard', [ManagerDashboardController::class, 'index'])->name('dashboard');
     Route::resource('products', ProductController::class);
     Route::resource('staff', StaffController::class);
@@ -141,7 +142,7 @@ Route::middleware(['auth', 'checkrole:manager'])->prefix('manager')->name('manag
 });
 
 // Staff routes
-Route::middleware(['auth', 'checkrole:staff'])->prefix('staff')->name('staff.')->group(function () {
+Route::middleware(['auth', \App\Http\Middleware\CheckRole::class.':staff'])->prefix('staff')->name('staff.')->group(function () {
     Route::get('/dashboard', [StaffDashboardController::class, 'index'])->name('dashboard');
     Route::get('/orders', function () {
         return view('staff.orders.index');
@@ -158,7 +159,7 @@ Route::middleware(['auth', 'checkrole:staff'])->prefix('staff')->name('staff.')-
 });
 
 // Customer routes
-Route::middleware(['auth', 'checkrole:customer'])->group(function () {
+Route::middleware(['auth', \App\Http\Middleware\CheckRole::class.':customer'])->group(function () {
     Route::get('/orders', function () {
         return view('customer.orders.index');
     })->name('orders');
