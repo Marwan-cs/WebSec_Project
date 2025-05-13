@@ -8,6 +8,9 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Manager\DashboardController as ManagerDashboardController;
+use App\Http\Controllers\Staff\DashboardController as StaffDashboardController;
 
 // Public Routes
 Route::get('/', function () {
@@ -113,3 +116,55 @@ Route::middleware(['auth', \App\Http\Middleware\CheckRole::class.':admin'])->gro
         return view('admin.settings');
     })->name('settings');
 });
+
+// Admin routes
+Route::middleware(['auth', 'checkrole:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::resource('roles', RoleController::class);
+    Route::resource('users', UserController::class);
+    Route::get('/settings', function () {
+        return view('admin.settings');
+    })->name('settings');
+});
+
+// Manager routes
+Route::middleware(['auth', 'checkrole:manager'])->prefix('manager')->name('manager.')->group(function () {
+    Route::get('/dashboard', [ManagerDashboardController::class, 'index'])->name('dashboard');
+    Route::resource('products', ProductController::class);
+    Route::resource('staff', StaffController::class);
+    Route::get('/reports/sales', function () {
+        return view('manager.reports.sales');
+    })->name('reports.sales');
+    Route::get('/reports/inventory', function () {
+        return view('manager.reports.inventory');
+    })->name('reports.inventory');
+});
+
+// Staff routes
+Route::middleware(['auth', 'checkrole:staff'])->prefix('staff')->name('staff.')->group(function () {
+    Route::get('/dashboard', [StaffDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/orders', function () {
+        return view('staff.orders.index');
+    })->name('orders');
+    Route::get('/orders/{order}', function ($order) {
+        return view('staff.orders.show', compact('order'));
+    })->name('orders.show');
+    Route::get('/customers', function () {
+        return view('staff.customers.index');
+    })->name('customers');
+    Route::get('/inventory', function () {
+        return view('staff.inventory.index');
+    })->name('inventory');
+});
+
+// Customer routes
+Route::middleware(['auth', 'checkrole:customer'])->group(function () {
+    Route::get('/orders', function () {
+        return view('customer.orders.index');
+    })->name('orders');
+    Route::get('/orders/{order}', function ($order) {
+        return view('customer.orders.show', compact('order'));
+    })->name('orders.show');
+});
+
+require __DIR__.'/auth.php';
