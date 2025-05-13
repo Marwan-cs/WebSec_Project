@@ -5,21 +5,22 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProfileController;
 
-// Home Page
+// Public Routes
 Route::get('/', function () {
     return view('webfront.home');
 });
 
-// Web Pages (about, blog, etc.)
+// Web Pages (public access)
 Route::prefix('')->group(function () {
     Route::view('/about', 'webfront.about')->name('about');
     Route::view('/blog', 'webfront.blog')->name('blog');
     Route::view('/blog-details', 'webfront.blog-details')->name('blog.details');
     Route::view('/shop', 'webfront.shop')->name('shop');
     Route::view('/shop-details', 'webfront.shop-details')->name('shop.details');
-    Route::view('/shopping-cart', 'webfront.shopping-cart')->name('cart');
-    Route::view('/checkout', 'webfront.checkout')->name('checkout');
     Route::view('/contact', 'webfront.contact')->name('contact');
 });
 
@@ -32,9 +33,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-// Profile Route
-Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile')->middleware(['auth', 'verified']);
 
 // Email Verification Routes
 Route::get('/email/verify', [AuthController::class, 'showVerifyEmail'])->name('verification.notice')->middleware('auth');
@@ -51,38 +49,67 @@ Route::post('/password/reset', [AuthController::class, 'resetPassword'])->name('
 Route::get('/auth/{provider}/redirect', [SocialiteController::class, 'redirectToProvider'])->name('socialite.redirect');
 Route::get('/auth/{provider}/callback', [SocialiteController::class, 'handleProviderCallback'])->name('socialite.callback');
 
-// Account Management Routes
+// Customer Routes (requires authentication)
 Route::middleware(['auth'])->group(function () {
+    // Shopping Cart
+    Route::view('/shopping-cart', 'webfront.shopping-cart')->name('cart');
+    Route::view('/checkout', 'webfront.checkout')->name('checkout');
+    
+    // Profile Management
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/account/delete', [AuthController::class, 'deleteAccount'])->name('account.delete');
+    
+    // Orders
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
 
-// Role Management Routes
-Route::group(['middleware' => ['web', 'auth']], function () {
-    Route::get('/roles', [RoleController::class, 'index'])
-        ->middleware(\App\Http\Middleware\CheckRole::class.':admin')
-        ->name('roles.index');
+// Staff Routes (requires staff role)
+Route::middleware(['auth', \App\Http\Middleware\CheckRole::class.':staff'])->group(function () {
+    Route::get('/staff/dashboard', function () {
+        return view('staff.dashboard');
+    })->name('staff.dashboard');
     
-    Route::get('/roles/create', [RoleController::class, 'create'])
-        ->middleware(\App\Http\Middleware\CheckRole::class.':admin')
-        ->name('roles.create');
+    Route::get('/staff/orders', [OrderController::class, 'staffIndex'])->name('staff.orders.index');
+    Route::put('/staff/orders/{order}', [OrderController::class, 'updateStatus'])->name('staff.orders.update');
+});
+
+// Manager Routes (requires manager role)
+Route::middleware(['auth', \App\Http\Middleware\CheckRole::class.':manager'])->group(function () {
+    Route::get('/manager/dashboard', function () {
+        return view('manager.dashboard');
+    })->name('manager.dashboard');
     
-    Route::post('/roles', [RoleController::class, 'store'])
-        ->middleware(\App\Http\Middleware\CheckRole::class.':admin')
-        ->name('roles.store');
+    // Product Management
+    Route::resource('products', ProductController::class);
     
-    Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])
-        ->middleware(\App\Http\Middleware\CheckRole::class.':admin')
-        ->name('roles.edit');
+    // Staff Management
+    Route::get('/staff', [ProfileController::class, 'staffIndex'])->name('staff.index');
+    Route::put('/staff/{user}/role', [RoleController::class, 'assignRole'])->name('staff.role.update');
     
-    Route::put('/roles/{role}', [RoleController::class, 'update'])
-        ->middleware(\App\Http\Middleware\CheckRole::class.':admin')
-        ->name('roles.update');
+    // Reports
+    Route::get('/reports/sales', [OrderController::class, 'salesReport'])->name('reports.sales');
+    Route::get('/reports/inventory', [ProductController::class, 'inventoryReport'])->name('reports.inventory');
+});
+
+// Admin Routes (requires admin role)
+Route::middleware(['auth', \App\Http\Middleware\CheckRole::class.':admin'])->group(function () {
+    Route::get('/admin/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
     
-    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])
-        ->middleware(\App\Http\Middleware\CheckRole::class.':admin')
-        ->name('roles.destroy');
+    // Role Management
+    Route::resource('roles', RoleController::class);
     
-    Route::post('/users/{user}/roles', [RoleController::class, 'assignRole'])
-        ->middleware(\App\Http\Middleware\CheckRole::class.':admin')
-        ->name('users.roles.assign');
+    // User Management
+    Route::get('/users', [ProfileController::class, 'index'])->name('users.index');
+    Route::get('/users/{user}', [ProfileController::class, 'show'])->name('users.show');
+    Route::put('/users/{user}', [ProfileController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [ProfileController::class, 'destroy'])->name('users.destroy');
+    
+    // System Settings
+    Route::get('/settings', function () {
+        return view('admin.settings');
+    })->name('settings');
 });

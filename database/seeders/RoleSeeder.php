@@ -16,19 +16,14 @@ class RoleSeeder extends Seeder
                 'description' => 'Full access to all features and settings',
             ],
             [
-                'name' => 'IT Staff',
-                'slug' => 'it',
-                'description' => 'Access to technical features and system maintenance',
+                'name' => 'Manager',
+                'slug' => 'manager',
+                'description' => 'Access to manage products, orders, and staff',
             ],
             [
-                'name' => 'Employee',
-                'slug' => 'employee',
+                'name' => 'Staff',
+                'slug' => 'staff',
                 'description' => 'Access to basic store operations and customer service',
-            ],
-            [
-                'name' => 'Accountant',
-                'slug' => 'accountant',
-                'description' => 'Access to financial records and reports',
             ],
             [
                 'name' => 'Customer',
