@@ -21,7 +21,7 @@ class TestDataSeeder extends Seeder
                 'stock' => 100,
                 'is_featured' => true,
                 'is_sale' => false,
-                'image_url' => 'https://via.placeholder.com/300',
+                'image_url' => '/img/product/product-1.jpg',
             ],
             [
                 'name' => 'Test Product 2',
@@ -30,7 +30,7 @@ class TestDataSeeder extends Seeder
                 'stock' => 50,
                 'is_featured' => true,
                 'is_sale' => true,
-                'image_url' => 'https://via.placeholder.com/300',
+                'image_url' => '/img/product/product-2.jpg',
             ],
             [
                 'name' => 'Test Product 3',
@@ -39,7 +39,7 @@ class TestDataSeeder extends Seeder
                 'stock' => 75,
                 'is_featured' => false,
                 'is_sale' => true,
-                'image_url' => 'https://via.placeholder.com/300',
+                'image_url' => '/img/product/product-3.jpg',
             ],
         ];
 

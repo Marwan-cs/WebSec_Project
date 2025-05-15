@@ -13,7 +13,7 @@
                     <a href="{{ route('shop') }}" class="btn btn-light btn-lg">Shop Now</a>
                 </div>
                 <div class="col-md-6">
-                    <img src="https://via.placeholder.com/600x400" alt="Hero Image" class="img-fluid rounded">
+                    <img src="/img/hero/hero-1.jpg" alt="Hero Image" class="img-fluid rounded">
                 </div>
             </div>
         </div>
@@ -26,7 +26,7 @@
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="card h-100">
-                        <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Category 1">
+                        <img src="/img/banner/banner-1.jpg" class="card-img-top" alt="Electronics">
                         <div class="card-body text-center">
                             <h5 class="card-title">Electronics</h5>
                             <a href="{{ route('shop') }}?category=electronics" class="btn btn-outline-primary">View Products</a>
@@ -35,7 +35,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="card h-100">
-                        <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Category 2">
+                        <img src="/img/banner/banner-2.jpg" class="card-img-top" alt="Fashion">
                         <div class="card-body text-center">
                             <h5 class="card-title">Fashion</h5>
                             <a href="{{ route('shop') }}?category=fashion" class="btn btn-outline-primary">View Products</a>
@@ -44,7 +44,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="card h-100">
-                        <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Category 3">
+                        <img src="/img/banner/banner-3.jpg" class="card-img-top" alt="Home & Living">
                         <div class="card-body text-center">
                             <h5 class="card-title">Home & Living</h5>
                             <a href="{{ route('shop') }}?category=home" class="btn btn-outline-primary">View Products</a>
@@ -69,7 +69,7 @@
                             <p class="card-text">{{ Illuminate\Support\Str::limit($product->description, 100) }}</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <span class="h5 mb-0">${{ number_format($product->price, 2) }}</span>
-                                <a href="{{ route('shop.details', $product->id) }}" class="btn btn-primary">View Details</a>
+                                <a href="{{ url('/shop-details/' . $product->id) }}" class="btn btn-primary">View Details</a>
                             </div>
                         </div>
                     </div>
@@ -94,7 +94,7 @@
                     <a href="{{ route('shop') }}?sale=true" class="btn btn-primary btn-lg">Shop Sale Items</a>
                 </div>
                 <div class="col-md-6">
-                    <img src="https://via.placeholder.com/600x400" alt="Special Offers" class="img-fluid rounded">
+                    <img src="/img/hero/hero-1.jpg" alt="Special Offers" class="img-fluid rounded">
                 </div>
             </div>
         </div>
@@ -109,7 +109,7 @@
                     <div class="card h-100">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
-                                <img src="https://via.placeholder.com/50" class="rounded-circle me-3" alt="Customer">
+                                <img src="/img/about/testimonial-pic.jpg" class="rounded-circle me-3" alt="Customer" style="width: 64px; height: 64px; object-fit: cover;">
                                 <div>
                                     <h5 class="mb-0">John Doe</h5>
                                     <div class="text-warning">
@@ -129,7 +129,7 @@
                     <div class="card h-100">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
-                                <img src="https://via.placeholder.com/50" class="rounded-circle me-3" alt="Customer">
+                                <img src="/img/about/testimonial-pic.jpg" class="rounded-circle me-3" alt="Customer" style="width: 64px; height: 64px; object-fit: cover;">
                                 <div>
                                     <h5 class="mb-0">Jane Smith</h5>
                                     <div class="text-warning">
@@ -149,7 +149,7 @@
                     <div class="card h-100">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
-                                <img src="https://via.placeholder.com/50" class="rounded-circle me-3" alt="Customer">
+                                <img src="/img/about/testimonial-pic.jpg" class="rounded-circle me-3" alt="Customer" style="width: 64px; height: 64px; object-fit: cover;">
                                 <div>
                                     <h5 class="mb-0">Mike Johnson</h5>
                                     <div class="text-warning">

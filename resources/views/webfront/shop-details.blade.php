@@ -18,7 +18,7 @@
         <div class="row">
             <!-- Product Images -->
             <div class="col-md-6 mb-4">
-                <div class="card">
+                @if(isset($product->images) && count($product->images) > 0)
                     <div class="card-body p-0">
                         <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">
@@ -38,18 +38,20 @@
                             @endif
                         </div>
                     </div>
-                </div>
-                <!-- Thumbnail Navigation -->
-                @if(count($product->images) > 1)
-                <div class="row mt-3">
-                    @foreach($product->images as $index => $image)
-                    <div class="col-3">
-                        <img src="{{ $image->url }}" class="img-thumbnail cursor-pointer" 
-                             onclick="$('#productCarousel').carousel({{ $index }})" 
-                             alt="{{ $product->name }}">
+                    <!-- Thumbnail Navigation -->
+                    @if(count($product->images) > 1)
+                    <div class="row mt-3">
+                        @foreach($product->images as $index => $image)
+                        <div class="col-3">
+                            <img src="{{ $image->url }}" class="img-thumbnail cursor-pointer" 
+                                 onclick="$('#productCarousel').carousel({{ $index }})" 
+                                 alt="{{ $product->name }}">
+                        </div>
+                        @endforeach
                     </div>
-                    @endforeach
-                </div>
+                    @endif
+                @else
+                    <img src="{{ $product->image_url ?? '/img/shop-details/product-big.png' }}" class="img-fluid rounded w-100" alt="{{ $product->name }}">
                 @endif
             </div>
 
@@ -104,16 +106,24 @@
                     <div class="row">
                         <div class="col-md-6">
                             <p class="mb-2">
-                                <strong>Category:</strong> 
-                                <a href="{{ route('shop', ['category' => $product->category->slug]) }}">
-                                    {{ $product->category->name }}
-                                </a>
+                                <strong>Category:</strong>
+                                @if($product->category)
+                                    <a href="{{ route('shop', ['category' => $product->category->slug]) }}">
+                                        {{ $product->category->name }}
+                                    </a>
+                                @else
+                                    <span>No Category</span>
+                                @endif
                             </p>
                             <p class="mb-2">
-                                <strong>Brand:</strong> 
-                                <a href="{{ route('shop', ['brand' => $product->brand->slug]) }}">
-                                    {{ $product->brand->name }}
-                                </a>
+                                <strong>Brand:</strong>
+                                @if($product->brand)
+                                    <a href="{{ route('shop', ['brand' => $product->brand->slug]) }}">
+                                        {{ $product->brand->name }}
+                                    </a>
+                                @else
+                                    <span>No Brand</span>
+                                @endif
                             </p>
                         </div>
                         <div class="col-md-6">
@@ -172,17 +182,23 @@
                     <div class="tab-pane fade" id="specifications">
                         <table class="table">
                             <tbody>
-                                @foreach($product->specifications as $key => $value)
-                                <tr>
-                                    <th>{{ $key }}</th>
-                                    <td>{{ $value }}</td>
-                                </tr>
-                                @endforeach
+                                @if(!empty($product->specifications) && is_iterable($product->specifications))
+                                    @foreach($product->specifications as $key => $value)
+                                    <tr>
+                                        <th>{{ $key }}</th>
+                                        <td>{{ $value }}</td>
+                                    </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="2">No specifications available.</td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
                     <div class="tab-pane fade" id="reviews">
-                        @if($product->reviews->count() > 0)
+                        @if(!empty($product->reviews) && is_countable($product->reviews) && $product->reviews->count() > 0)
                             @foreach($product->reviews as $review)
                             <div class="border-bottom pb-3 mb-3">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
@@ -239,13 +255,13 @@
                     @foreach($relatedProducts as $relatedProduct)
                     <div class="col-md-3">
                         <div class="card h-100">
-                            <img src="{{ $relatedProduct->image_url }}" class="card-img-top" alt="{{ $relatedProduct->name }}">
+                            <img src="{{ $relatedProduct->image_url ?? '/img/product/product-1.jpg' }}" class="card-img-top" alt="{{ $relatedProduct->name }}">
                             <div class="card-body">
                                 <h5 class="card-title">{{ $relatedProduct->name }}</h5>
                                 <p class="card-text text-muted">{{ Str::limit($relatedProduct->description, 100) }}</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="h5 mb-0">${{ number_format($relatedProduct->price, 2) }}</span>
-                                    <a href="{{ route('shop.details', $relatedProduct->id) }}" class="btn btn-primary">View</a>
+                                    <a href="{{ url('/shop-details/' . $relatedProduct->id) }}" class="btn btn-primary">View</a>
                                 </div>
                             </div>
                         </div>

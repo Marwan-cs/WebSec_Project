@@ -28,10 +28,10 @@
                                     <tr>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <img src="{{ $item->model->image_url }}" alt="{{ $item->name }}" 
+                                                <img src="{{ $item['image'] ?? '/img/product/product-1.jpg' }}" alt="{{ $item['name'] }}" 
                                                      class="img-thumbnail me-3" style="width: 80px;">
                                                 <div>
-                                                    <h6 class="mb-0">{{ $item->name }}</h6>
+                                                    <h6 class="mb-0">{{ $item['name'] }}</h6>
                                                     <small class="text-muted">
                                                         @if($item->options->has('size'))
                                                         Size: {{ $item->options->size }}

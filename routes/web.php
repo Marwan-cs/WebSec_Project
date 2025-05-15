@@ -23,8 +23,8 @@ Route::prefix('')->group(function () {
     Route::view('/about', 'webfront.about')->name('about');
     Route::view('/blog', 'webfront.blog')->name('blog');
     Route::view('/blog-details', 'webfront.blog-details')->name('blog.details');
-    Route::view('/shop', 'webfront.shop')->name('shop');
-    Route::view('/shop-details', 'webfront.shop-details')->name('shop.details');
+    Route::get('/shop', [ProductController::class, 'shop'])->name('shop');
+    Route::get('/shop-details/{id}', [ProductController::class, 'showDetails'])->name('shop.details');
     Route::view('/contact', 'webfront.contact')->name('contact');
 });
 

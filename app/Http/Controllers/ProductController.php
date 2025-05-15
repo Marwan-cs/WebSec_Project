@@ -84,4 +84,28 @@ class ProductController extends Controller
 
         return view('reports.inventory', compact('products'));
     }
+
+    public function shop(Request $request)
+    {
+        $products = Product::paginate(12);
+        // Use dummy categories and brands if models do not exist
+        $categories = [
+            (object)['id' => 1, 'name' => 'Electronics', 'slug' => 'electronics'],
+            (object)['id' => 2, 'name' => 'Fashion', 'slug' => 'fashion'],
+            (object)['id' => 3, 'name' => 'Home & Living', 'slug' => 'home'],
+        ];
+        $brands = [
+            (object)['id' => 1, 'name' => 'Brand A'],
+            (object)['id' => 2, 'name' => 'Brand B'],
+            (object)['id' => 3, 'name' => 'Brand C'],
+        ];
+        return view('webfront.shop', compact('products', 'categories', 'brands'));
+    }
+
+    public function showDetails($id)
+    {
+        $product = Product::findOrFail($id);
+        $relatedProducts = Product::where('id', '!=', $id)->take(4)->get();
+        return view('webfront.shop-details', compact('product', 'relatedProducts'));
+    }
 } 

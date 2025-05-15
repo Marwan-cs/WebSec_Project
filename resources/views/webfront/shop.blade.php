@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@php use Illuminate\Support\Str; @endphp
+
 @section('title', 'Shop - E-Commerce Store')
 
 @section('content')
@@ -103,7 +105,7 @@
                     <div class="col-md-4">
                         <div class="card h-100">
                             <div class="position-relative">
-                                <img src="{{ $product->image_url }}" class="card-img-top" alt="{{ $product->name }}">
+                                <img src="{{ $product->image_url ?? '/img/product/product-1.jpg' }}" class="card-img-top" alt="{{ $product->name }}">
                                 @if($product->is_sale)
                                 <span class="position-absolute top-0 end-0 badge bg-danger m-2">Sale</span>
                                 @endif
@@ -119,7 +121,7 @@
                                         <span class="h5 mb-0">${{ number_format($product->price, 2) }}</span>
                                     </div>
                                     <div class="btn-group">
-                                        <a href="{{ route('shop.details', $product->id) }}" class="btn btn-outline-primary">View</a>
+                                        <a href="{{ url('/shop-details/' . $product->id) }}" class="btn btn-outline-primary">View</a>
                                         <button type="button" class="btn btn-primary add-to-cart" data-product-id="{{ $product->id }}">
                                             <i class="fas fa-shopping-cart"></i>
                                         </button>
