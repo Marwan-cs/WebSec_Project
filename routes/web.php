@@ -11,6 +11,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Manager\DashboardController as ManagerDashboardController;
 use App\Http\Controllers\Staff\DashboardController as StaffDashboardController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 
 // Public Routes
 Route::get('/', function () {
@@ -55,8 +57,15 @@ Route::get('/auth/{provider}/callback', [SocialiteController::class, 'handleProv
 // Customer Routes (requires authentication)
 Route::middleware(['auth'])->group(function () {
     // Shopping Cart
-    Route::view('/shopping-cart', 'webfront.shopping-cart')->name('cart');
-    Route::view('/checkout', 'webfront.checkout')->name('checkout');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+    Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+    
+    // Checkout Routes
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
     
     // Profile Management
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');

@@ -12,9 +12,14 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'total_amount',
-        'status',
         'shipping_address',
-        'payment_method'
+        'shipping_city',
+        'shipping_state',
+        'shipping_zipcode',
+        'shipping_country',
+        'payment_method',
+        'status',
+        'tracking_number'
     ];
 
     protected $casts = [
@@ -29,5 +34,25 @@ class Order extends Model
     public function items()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
+    }
+
+    public function scopeProcessing($query)
+    {
+        return $query->where('status', 'processing');
+    }
+
+    public function scopeCompleted($query)
+    {
+        return $query->where('status', 'completed');
+    }
+
+    public function scopeCancelled($query)
+    {
+        return $query->where('status', 'cancelled');
     }
 } 
