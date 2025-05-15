@@ -1,204 +1,171 @@
-@extends('layouts.master')
+@extends('layouts.app')
 
-@section('title', 'Home - HAM Store')
+@section('title', 'Home - E-Commerce Store')
 
 @section('content')
+    <!-- Hero Section -->
+    <div class="bg-primary text-white py-5 mb-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="display-4 fw-bold">Welcome to Our Store</h1>
+                    <p class="lead">Discover amazing products at unbeatable prices.</p>
+                    <a href="{{ route('shop') }}" class="btn btn-light btn-lg">Shop Now</a>
+                </div>
+                <div class="col-md-6">
+                    <img src="https://via.placeholder.com/600x400" alt="Hero Image" class="img-fluid rounded">
+                </div>
+            </div>
+        </div>
+    </div>
 
-<!-- Hero Section Begin -->
-<section class="hero">
-    <div class="hero__slider owl-carousel">
-        <div class="hero__items set-bg" data-setbg="img/hero/hero-1.jpg">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-5 col-lg-7 col-md-8">
-                        <div class="hero__text">
-                            <h6>Summer Collection</h6>
-                            <h2>Fall - Winter Collections 2030</h2>
-                            <p>A specialist label creating luxury essentials. Ethically crafted with an unwavering
-                                commitment to exceptional quality.</p>
-                            <a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
-                            <div class="hero__social">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-pinterest"></i></a>
-                                <a href="#"><i class="fa fa-instagram"></i></a>
+    <!-- Featured Categories -->
+    <section class="mb-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Shop by Category</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Category 1">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Electronics</h5>
+                            <a href="{{ route('shop') }}?category=electronics" class="btn btn-outline-primary">View Products</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Category 2">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Fashion</h5>
+                            <a href="{{ route('shop') }}?category=fashion" class="btn btn-outline-primary">View Products</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Category 3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Home & Living</h5>
+                            <a href="{{ route('shop') }}?category=home" class="btn btn-outline-primary">View Products</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="mb-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Featured Products</h2>
+            <div class="row g-4">
+                @foreach($featuredProducts as $product)
+                <div class="col-md-3">
+                    <div class="card h-100">
+                        <img src="{{ $product->image_url }}" class="card-img-top" alt="{{ $product->name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $product->name }}</h5>
+                            <p class="card-text text-muted">{{ Str::limit($product->description, 100) }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 mb-0">${{ number_format($product->price, 2) }}</span>
+                                <a href="{{ route('shop.details', $product->id) }}" class="btn btn-primary">View Details</a>
                             </div>
                         </div>
                     </div>
                 </div>
+                @endforeach
             </div>
         </div>
-        <div class="hero__items set-bg" data-setbg="img/hero/hero-2.jpg">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-5 col-lg-7 col-md-8">
-                        <div class="hero__text">
-                            <h6>Summer Collection</h6>
-                            <h2>Fall - Winter Collections 2030</h2>
-                            <p>A specialist label creating luxury essentials. Ethically crafted with an unwavering
-                                commitment to exceptional quality.</p>
-                            <a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
-                            <div class="hero__social">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-pinterest"></i></a>
-                                <a href="#"><i class="fa fa-instagram"></i></a>
+    </section>
+
+    <!-- Special Offers -->
+    <section class="bg-light py-5 mb-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h2>Special Offers</h2>
+                    <p class="lead">Get up to 50% off on selected items!</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success me-2"></i> Free shipping on orders over $50</li>
+                        <li><i class="fas fa-check text-success me-2"></i> 30-day money-back guarantee</li>
+                        <li><i class="fas fa-check text-success me-2"></i> Secure payment processing</li>
+                    </ul>
+                    <a href="{{ route('shop') }}?sale=true" class="btn btn-primary btn-lg">Shop Sale Items</a>
+                </div>
+                <div class="col-md-6">
+                    <img src="https://via.placeholder.com/600x400" alt="Special Offers" class="img-fluid rounded">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="mb-5">
+        <div class="container">
+            <h2 class="text-center mb-4">What Our Customers Say</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="https://via.placeholder.com/50" class="rounded-circle me-3" alt="Customer">
+                                <div>
+                                    <h5 class="mb-0">John Doe</h5>
+                                    <div class="text-warning">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
                             </div>
+                            <p class="card-text">"Amazing products and fast shipping! Will definitely shop here again."</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="https://via.placeholder.com/50" class="rounded-circle me-3" alt="Customer">
+                                <div>
+                                    <h5 class="mb-0">Jane Smith</h5>
+                                    <div class="text-warning">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-text">"Great customer service and quality products. Highly recommended!"</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="https://via.placeholder.com/50" class="rounded-circle me-3" alt="Customer">
+                                <div>
+                                    <h5 class="mb-0">Mike Johnson</h5>
+                                    <div class="text-warning">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-text">"The best online shopping experience I've had. Fast delivery and great prices."</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-<!-- Hero Section End -->
-
-<!-- Banner Section Begin -->
-<section class="banner spad">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-7 offset-lg-4">
-                <div class="banner__item">
-                    <div class="banner__item__pic">
-                        <img src="img/banner/banner-1.jpg" alt="">
-                    </div>
-                    <div class="banner__item__text">
-                        <h2>Clothing Collections 2030</h2>
-                        <a href="#">Shop now</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-5">
-                <div class="banner__item banner__item--middle">
-                    <div class="banner__item__pic">
-                        <img src="img/banner/banner-2.jpg" alt="">
-                    </div>
-                    <div class="banner__item__text">
-                        <h2>Accessories</h2>
-                        <a href="#">Shop now</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-7">
-                <div class="banner__item banner__item--last">
-                    <div class="banner__item__pic">
-                        <img src="img/banner/banner-3.jpg" alt="">
-                    </div>
-                    <div class="banner__item__text">
-                        <h2>Shoes Spring 2030</h2>
-                        <a href="#">Shop now</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- Banner Section End -->
-
-<!-- Product Section Begin -->
-<section class="product spad">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <ul class="filter__controls">
-                    <li class="active" data-filter="*">Best Sellers</li>
-                    <li data-filter=".new-arrivals">New Arrivals</li>
-                    <li data-filter=".hot-sales">Hot Sales</li>
-                </ul>
-            </div>
-        </div>
-        <div class="row product__filter">
-            <!-- Products here (can be repeated dynamically later) -->
-        </div>
-    </div>
-</section>
-<!-- Product Section End -->
-
-<!-- Categories Section Begin -->
-<section class="categories spad">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3">
-                <div class="categories__text">
-                    <h2>Clothings Hot <br /> <span>Shoe Collection</span> <br /> Accessories</h2>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="categories__hot__deal">
-                    <img src="img/product-sale.png" alt="">
-                    <div class="hot__deal__sticker">
-                        <span>Sale Of</span>
-                        <h5>$29.99</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 offset-lg-1">
-                <div class="categories__deal__countdown">
-                    <span>Deal Of The Week</span>
-                    <h2>Multi-pocket Chest Bag Black</h2>
-                    <div class="categories__deal__countdown__timer" id="countdown">
-                        <div class="cd-item">
-                            <span>3</span>
-                            <p>Days</p>
-                        </div>
-                        <div class="cd-item">
-                            <span>1</span>
-                            <p>Hours</p>
-                        </div>
-                        <div class="cd-item">
-                            <span>50</span>
-                            <p>Minutes</p>
-                        </div>
-                        <div class="cd-item">
-                            <span>18</span>
-                            <p>Seconds</p>
-                        </div>
-                    </div>
-                    <a href="#" class="primary-btn">Shop now</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- Categories Section End -->
-
-<!-- Instagram Section Begin -->
-<section class="instagram spad">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="instagram__pic">
-                    <!-- Instagram pictures -->
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="instagram__text">
-                    <h2>Instagram</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                    <h3>#HAM_STORE</h3>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- Instagram Section End -->
-
-<!-- Latest Blog Section Begin -->
-<section class="latest spad">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="section-title">
-                    <span>Latest News</span>
-                    <h2>Fashion New Trends</h2>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <!-- Blog posts here -->
-        </div>
-    </div>
-</section>
-<!-- Latest Blog Section End -->
-
+    </section>
 @endsection
