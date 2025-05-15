@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @php use Illuminate\Support\Str; @endphp
+@php use Illuminate\Support\Facades\Auth; @endphp
 
 @section('title', 'Shop - E-Commerce Store')
 
@@ -100,6 +101,11 @@
 
             <!-- Products Grid -->
             <div class="col-lg-9">
+                @if(Auth::user() && (Auth::user()->hasRole('admin') || Auth::user()->hasRole('manager')))
+                    <div class="mb-3">
+                        <a href="{{ route('products.create') }}" class="btn btn-success">Add Product</a>
+                    </div>
+                @endif
                 <div class="row g-4" id="products-grid">
                     @forelse($products as $product)
                     <div class="col-md-4">
@@ -125,6 +131,14 @@
                                         <button type="button" class="btn btn-primary add-to-cart" data-product-id="{{ $product->id }}">
                                             <i class="fas fa-shopping-cart"></i>
                                         </button>
+                                        @if(Auth::user() && (Auth::user()->hasRole('admin') || Auth::user()->hasRole('manager')))
+                                            <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning">Edit</a>
+                                            <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

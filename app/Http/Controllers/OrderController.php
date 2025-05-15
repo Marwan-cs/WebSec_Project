@@ -25,12 +25,15 @@ class OrderController extends Controller
 
     public function staffIndex()
     {
+        $this->authorize('viewAny', Order::class);
         $orders = Order::with('user')->latest()->paginate(10);
         return view('staff.orders.index', compact('orders'));
     }
 
     public function updateStatus(Request $request, Order $order)
     {
+        $this->authorize('update', $order);
+        
         $validated = $request->validate([
             'status' => 'required|in:pending,processing,completed,cancelled'
         ]);
@@ -52,6 +55,8 @@ class OrderController extends Controller
 
     public function salesReport()
     {
+        $this->authorize('viewAny', Order::class);
+        
         $orders = Order::selectRaw('
                 DATE(created_at) as date,
                 COUNT(*) as total_orders,
@@ -62,6 +67,6 @@ class OrderController extends Controller
             ->orderBy('date', 'desc')
             ->get();
 
-        return view('reports.sales', compact('orders'));
+        return view('manager.reports.sales', compact('orders'));
     }
 } 

@@ -2,6 +2,8 @@
 
 @section('title', 'Checkout - E-Commerce Store')
 
+@php use App\Models\Cart; @endphp
+
 @section('content')
     <div class="container py-5">
         <h1 class="mb-4">Checkout</h1>
@@ -18,52 +20,32 @@
                         <div class="card-body">
                             <h5 class="card-title mb-4">Shipping Information</h5>
                             <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label for="first_name" class="form-label">First Name</label>
-                                    <input type="text" class="form-control" id="first_name" name="first_name" 
-                                           value="{{ old('first_name', auth()->user()->first_name ?? '') }}" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="last_name" class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" id="last_name" name="last_name" 
-                                           value="{{ old('last_name', auth()->user()->last_name ?? '') }}" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email" 
-                                           value="{{ old('email', auth()->user()->email ?? '') }}" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="phone" class="form-label">Phone</label>
-                                    <input type="tel" class="form-control" id="phone" name="phone" 
-                                           value="{{ old('phone', auth()->user()->phone ?? '') }}" required>
-                                </div>
                                 <div class="col-12">
-                                    <label for="address" class="form-label">Address</label>
-                                    <input type="text" class="form-control" id="address" name="address" 
-                                           value="{{ old('address', auth()->user()->address ?? '') }}" required>
+                                    <label for="shipping_address" class="form-label">Address</label>
+                                    <input type="text" class="form-control" id="shipping_address" name="shipping_address" 
+                                           value="{{ old('shipping_address', auth()->user()->address ?? '') }}" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="city" class="form-label">City</label>
-                                    <input type="text" class="form-control" id="city" name="city" 
-                                           value="{{ old('city', auth()->user()->city ?? '') }}" required>
+                                    <label for="shipping_city" class="form-label">City</label>
+                                    <input type="text" class="form-control" id="shipping_city" name="shipping_city" 
+                                           value="{{ old('shipping_city', auth()->user()->city ?? '') }}" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="state" class="form-label">State</label>
-                                    <input type="text" class="form-control" id="state" name="state" 
-                                           value="{{ old('state', auth()->user()->state ?? '') }}" required>
+                                    <label for="shipping_state" class="form-label">State</label>
+                                    <input type="text" class="form-control" id="shipping_state" name="shipping_state" 
+                                           value="{{ old('shipping_state', auth()->user()->state ?? '') }}" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="zip_code" class="form-label">ZIP Code</label>
-                                    <input type="text" class="form-control" id="zip_code" name="zip_code" 
-                                           value="{{ old('zip_code', auth()->user()->zip_code ?? '') }}" required>
+                                    <label for="shipping_zipcode" class="form-label">ZIP Code</label>
+                                    <input type="text" class="form-control" id="shipping_zipcode" name="shipping_zipcode" 
+                                           value="{{ old('shipping_zipcode', auth()->user()->zip_code ?? '') }}" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="country" class="form-label">Country</label>
-                                    <select class="form-select" id="country" name="country" required>
+                                    <label for="shipping_country" class="form-label">Country</label>
+                                    <select class="form-select" id="shipping_country" name="shipping_country" required>
                                         <option value="">Select Country</option>
                                         @foreach($countries as $code => $name)
-                                        <option value="{{ $code }}" {{ old('country', auth()->user()->country ?? '') == $code ? 'selected' : '' }}>
+                                        <option value="{{ $code }}" {{ old('shipping_country', auth()->user()->country ?? '') == $code ? 'selected' : '' }}>
                                             {{ $name }}
                                         </option>
                                         @endforeach
@@ -126,7 +108,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-check mb-3 mt-3">
+                            <div class="form-check mb-3">
                                 <input class="form-check-input" type="radio" name="payment_method" 
                                        id="paypal" value="paypal">
                                 <label class="form-check-label" for="paypal">
@@ -158,10 +140,10 @@
                             @foreach(Cart::content() as $item)
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div>
-                                    <h6 class="mb-0">{{ $item->name }}</h6>
-                                    <small class="text-muted">Qty: {{ $item->qty }}</small>
+                                    <h6 class="mb-0">{{ $item['name'] }}</h6>
+                                    <small class="text-muted">Qty: {{ $item['quantity'] }}</small>
                                 </div>
-                                <span>${{ number_format($item->total, 2) }}</span>
+                                <span>${{ number_format($item['price'] * $item['quantity'], 2) }}</span>
                             </div>
                             @endforeach
                         </div>

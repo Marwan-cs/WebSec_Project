@@ -14,6 +14,16 @@ class ReviewController extends Controller
             'comment' => 'required|string|max:1000',
         ]);
 
+        // Check if the user has purchased this product
+        $user = auth()->user();
+        $hasPurchased = $user && $user->orders()
+            ->whereHas('items', function($q) use ($id) {
+                $q->where('product_id', $id);
+            })->exists();
+        if (!$hasPurchased) {
+            return redirect()->back()->with('error', 'You can only review products you have purchased.');
+        }
+
         // Here you would save the review to the database
         // Example (if you have a Review model):
         // Review::create([

@@ -72,4 +72,21 @@ class Cart
         
         return $total;
     }
+
+    public static function subtotal()
+    {
+        return self::total();
+    }
+
+    public static function tax()
+    {
+        return self::subtotal() * 0.10; // 10% tax rate
+    }
+
+    public static function discount()
+    {
+        // Default to 0 discount
+        // This can be extended to handle promo codes, coupons, etc.
+        return 0;
+    }
 } 

@@ -20,8 +20,20 @@ class CheckoutController extends Controller
         foreach ($cart as $item) {
             $total += $item['price'] * $item['quantity'];
         }
-        
-        return view('checkout.index', compact('cart', 'total'));
+        $countries = [
+            'US' => 'United States',
+            'CA' => 'Canada',
+            'GB' => 'United Kingdom',
+            'AU' => 'Australia',
+            'DE' => 'Germany',
+            'FR' => 'France',
+            'IN' => 'India',
+            'CN' => 'China',
+            'JP' => 'Japan',
+            'BR' => 'Brazil',
+            // Add more as needed
+        ];
+        return view('checkout.index', compact('cart', 'total', 'countries'));
     }
 
     public function process(Request $request)

@@ -2,6 +2,8 @@
 
 @section('title', 'Shopping Cart - E-Commerce Store')
 
+@php use App\Models\Cart; @endphp
+
 @section('content')
     <div class="container py-5">
         <h1 class="mb-4">Shopping Cart</h1>
@@ -24,7 +26,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach(Cart::content() as $item)
+                                    @foreach(Cart::content() as $id => $item)
                                     <tr>
                                         <td>
                                             <div class="d-flex align-items-center">
@@ -33,32 +35,32 @@
                                                 <div>
                                                     <h6 class="mb-0">{{ $item['name'] }}</h6>
                                                     <small class="text-muted">
-                                                        @if($item->options->has('size'))
-                                                        Size: {{ $item->options->size }}
+                                                        @if(isset($item['size']))
+                                                            Size: {{ $item['size'] }}
                                                         @endif
-                                                        @if($item->options->has('color'))
-                                                        Color: {{ $item->options->color }}
+                                                        @if(isset($item['color']))
+                                                            Color: {{ $item['color'] }}
                                                         @endif
                                                     </small>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>${{ number_format($item->price, 2) }}</td>
+                                        <td>${{ number_format($item['price'], 2) }}</td>
                                         <td>
                                             <div class="input-group" style="width: 120px;">
                                                 <button type="button" class="btn btn-outline-secondary btn-sm" 
-                                                        onclick="updateQuantity({{ $item->rowId }}, 'decrease')">-</button>
+                                                        onclick="updateQuantity({{ $id }}, 'decrease')">-</button>
                                                 <input type="number" class="form-control form-control-sm text-center" 
-                                                       value="{{ $item->qty }}" min="1" max="{{ $item->model->stock }}"
-                                                       onchange="updateQuantity({{ $item->rowId }}, 'set', this.value)">
+                                                       value="{{ $item['quantity'] }}" min="1" max="{{ $item['stock'] ?? 99 }}"
+                                                       onchange="updateQuantity({{ $id }}, 'set', this.value)">
                                                 <button type="button" class="btn btn-outline-secondary btn-sm" 
-                                                        onclick="updateQuantity({{ $item->rowId }}, 'increase')">+</button>
+                                                        onclick="updateQuantity({{ $id }}, 'increase')">+</button>
                                             </div>
                                         </td>
-                                        <td>${{ number_format($item->total, 2) }}</td>
+                                        <td>${{ number_format($item['price'] * $item['quantity'], 2) }}</td>
                                         <td>
                                             <button type="button" class="btn btn-link text-danger" 
-                                                    onclick="removeItem('{{ $item->rowId }}')">
+                                                    onclick="removeItem('{{ $id }}')">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </td>
@@ -88,11 +90,11 @@
                         <h5 class="card-title">Order Summary</h5>
                         <div class="d-flex justify-content-between mb-2">
                             <span>Subtotal</span>
-                            <span>${{ number_format(Cart::subtotal(), 2) }}</span>
+                            <span>${{ number_format(Cart::total(), 2) }}</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span>Tax</span>
-                            <span>${{ number_format(Cart::tax(), 2) }}</span>
+                            <span>$0.00</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span>Shipping</span>

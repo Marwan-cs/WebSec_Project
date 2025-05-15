@@ -15,11 +15,17 @@ class ProductController extends Controller
 
     public function create()
     {
+        if (!auth()->user() || (!auth()->user()->hasRole('admin') && !auth()->user()->hasRole('manager'))) {
+            abort(403, 'Unauthorized');
+        }
         return view('products.create');
     }
 
     public function store(Request $request)
     {
+        if (!auth()->user() || (!auth()->user()->hasRole('admin') && !auth()->user()->hasRole('manager'))) {
+            abort(403, 'Unauthorized');
+        }
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -45,11 +51,17 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
+        if (!auth()->user() || (!auth()->user()->hasRole('admin') && !auth()->user()->hasRole('manager'))) {
+            abort(403, 'Unauthorized');
+        }
         return view('products.edit', compact('product'));
     }
 
     public function update(Request $request, Product $product)
     {
+        if (!auth()->user() || (!auth()->user()->hasRole('admin') && !auth()->user()->hasRole('manager'))) {
+            abort(403, 'Unauthorized');
+        }
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -70,6 +82,9 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        if (!auth()->user() || (!auth()->user()->hasRole('admin') && !auth()->user()->hasRole('manager'))) {
+            abort(403, 'Unauthorized');
+        }
         $product->delete();
 
         return redirect()->route('products.index')
