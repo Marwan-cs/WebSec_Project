@@ -66,7 +66,7 @@
                         <img src="{{ $product->image_url }}" class="card-img-top" alt="{{ $product->name }}">
                         <div class="card-body">
                             <h5 class="card-title">{{ $product->name }}</h5>
-                            <p class="card-text text-muted">{{ Str::limit($product->description, 100) }}</p>
+                            <p class="card-text">{{ Illuminate\Support\Str::limit($product->description, 100) }}</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <span class="h5 mb-0">${{ number_format($product->price, 2) }}</span>
                                 <a href="{{ route('shop.details', $product->id) }}" class="btn btn-primary">View Details</a>

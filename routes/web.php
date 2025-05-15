@@ -13,11 +13,10 @@ use App\Http\Controllers\Manager\DashboardController as ManagerDashboardControll
 use App\Http\Controllers\Staff\DashboardController as StaffDashboardController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\HomeController;
 
 // Public Routes
-Route::get('/', function () {
-    return view('webfront.home');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Web Pages (public access)
 Route::prefix('')->group(function () {
@@ -169,16 +168,6 @@ Route::middleware(['auth', \App\Http\Middleware\CheckRole::class.':staff'])->pre
     Route::get('/inventory', function () {
         return view('staff.inventory.index');
     })->name('inventory');
-});
-
-// Customer routes
-Route::middleware(['auth', \App\Http\Middleware\CheckRole::class.':customer'])->group(function () {
-    Route::get('/orders', function () {
-        return view('customer.orders.index');
-    })->name('orders');
-    Route::get('/orders/{order}', function ($order) {
-        return view('customer.orders.show', compact('order'));
-    })->name('orders.show');
 });
 
 require __DIR__.'/auth.php';

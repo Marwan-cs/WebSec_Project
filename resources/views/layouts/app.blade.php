@@ -1,6 +1,6 @@
 @php
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cart;
+use App\Models\Cart;
 @endphp
 
 <!DOCTYPE html>

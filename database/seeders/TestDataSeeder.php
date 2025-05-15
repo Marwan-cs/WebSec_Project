@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Role;
+use Illuminate\Support\Facades\Hash;
 
 class TestDataSeeder extends Seeder
 {
@@ -15,68 +16,90 @@ class TestDataSeeder extends Seeder
         $products = [
             [
                 'name' => 'Test Product 1',
-                'description' => 'This is a test product 1',
+                'description' => 'This is a test product description.',
                 'price' => 99.99,
                 'stock' => 100,
+                'is_featured' => true,
+                'is_sale' => false,
+                'image_url' => 'https://via.placeholder.com/300',
             ],
             [
                 'name' => 'Test Product 2',
-                'description' => 'This is a test product 2',
+                'description' => 'Another test product description.',
                 'price' => 149.99,
                 'stock' => 50,
+                'is_featured' => true,
+                'is_sale' => true,
+                'image_url' => 'https://via.placeholder.com/300',
             ],
             [
                 'name' => 'Test Product 3',
-                'description' => 'This is a test product 3',
+                'description' => 'Yet another test product description.',
                 'price' => 199.99,
                 'stock' => 75,
+                'is_featured' => false,
+                'is_sale' => true,
+                'image_url' => 'https://via.placeholder.com/300',
             ],
         ];
 
         foreach ($products as $product) {
-            Product::create($product);
+            Product::updateOrCreate(
+                ['name' => $product['name']],
+                $product
+            );
         }
 
         // Create test roles if they don't exist
         $roles = ['admin', 'manager', 'staff', 'customer'];
         foreach ($roles as $role) {
-            Role::firstOrCreate(['name' => $role]);
+            \App\Models\Role::updateOrCreate(
+                ['slug' => $role],
+                ['name' => $role, 'slug' => $role]
+            );
         }
 
         // Create test users
         $users = [
             [
                 'name' => 'Admin User',
-                'email' => 'admin@test.com',
-                'password' => bcrypt('password'),
+                'email' => 'admin@example.com',
+                'password' => Hash::make('password'),
                 'role' => 'admin',
             ],
             [
                 'name' => 'Manager User',
-                'email' => 'manager@test.com',
-                'password' => bcrypt('password'),
+                'email' => 'manager@example.com',
+                'password' => Hash::make('password'),
                 'role' => 'manager',
             ],
             [
                 'name' => 'Staff User',
-                'email' => 'staff@test.com',
-                'password' => bcrypt('password'),
+                'email' => 'staff@example.com',
+                'password' => Hash::make('password'),
                 'role' => 'staff',
             ],
             [
                 'name' => 'Customer User',
-                'email' => 'customer@test.com',
-                'password' => bcrypt('password'),
+                'email' => 'customer@example.com',
+                'password' => Hash::make('password'),
                 'role' => 'customer',
             ],
         ];
 
         foreach ($users as $userData) {
-            $role = $userData['role'];
-            unset($userData['role']);
-            
-            $user = User::create($userData);
-            $user->roles()->attach(Role::where('name', $role)->first());
+            $user = User::updateOrCreate(
+                ['email' => $userData['email']],
+                [
+                    'name' => $userData['name'],
+                    'password' => $userData['password'],
+                ]
+            );
+
+            $role = Role::where('name', $userData['role'])->first();
+            if ($role) {
+                $user->roles()->sync([$role->id]);
+            }
         }
     }
 } 
