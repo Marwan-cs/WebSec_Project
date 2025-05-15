@@ -45,10 +45,10 @@
                         <div class="col-md-12">
                             <h3>Quick Actions</h3>
                             <div class="list-group">
-                                <a href="{{ route('staff.orders') }}" class="list-group-item list-group-item-action">
+                                <a href="{{ route('staff.orders.index') }}" class="list-group-item list-group-item-action">
                                     <i class="fas fa-shopping-cart"></i> Manage Orders
                                 </a>
-                                <a href="{{ route('staff.customers') }}" class="list-group-item list-group-item-action">
+                                <a href="{{ route('staff.customers.index') }}" class="list-group-item list-group-item-action">
                                     <i class="fas fa-users"></i> View Customers
                                 </a>
                                 <a href="{{ route('staff.inventory') }}" class="list-group-item list-group-item-action">

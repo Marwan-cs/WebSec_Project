@@ -93,11 +93,8 @@ class ProductController extends Controller
 
     public function inventoryReport()
     {
-        $products = Product::select('name', 'stock', 'price')
-            ->orderBy('stock', 'asc')
-            ->get();
-
-        return view('reports.inventory', compact('products'));
+        $products = Product::all();
+        return view('manager.reports.inventory', compact('products'));
     }
 
     public function shop(Request $request)
@@ -129,5 +126,37 @@ class ProductController extends Controller
             $relatedProduct->image_url = $relatedProduct->image_url;
         }
         return view('webfront.shop-details', compact('product', 'relatedProducts'));
+    }
+
+    public function staffInventory(Request $request)
+    {
+        $query = Product::query();
+
+        // Search functionality
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('sku', 'like', "%{$search}%");
+            });
+        }
+
+        // Stock filter
+        if ($request->has('stock')) {
+            switch ($request->stock) {
+                case 'low':
+                    $query->whereBetween('stock', [1, 5]);
+                    break;
+                case 'out':
+                    $query->where('stock', 0);
+                    break;
+                case 'in':
+                    $query->where('stock', '>', 5);
+                    break;
+            }
+        }
+
+        $products = $query->latest()->paginate(10);
+        return view('staff.inventory.index', compact('products'));
     }
 } 

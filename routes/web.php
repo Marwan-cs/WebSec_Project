@@ -16,6 +16,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\UserController;
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -158,18 +159,17 @@ Route::middleware(['auth', \App\Http\Middleware\CheckRole::class.':manager'])->p
 // Staff routes
 Route::middleware(['auth', \App\Http\Middleware\CheckRole::class.':staff'])->prefix('staff')->name('staff.')->group(function () {
     Route::get('/dashboard', [StaffDashboardController::class, 'index'])->name('dashboard');
-    Route::get('/orders', function () {
-        return view('staff.orders.index');
-    })->name('orders');
-    Route::get('/orders/{order}', function ($order) {
-        return view('staff.orders.show', compact('order'));
-    })->name('orders.show');
-    Route::get('/customers', function () {
-        return view('staff.customers.index');
-    })->name('customers');
-    Route::get('/inventory', function () {
-        return view('staff.inventory.index');
-    })->name('inventory');
+    Route::get('/orders', [OrderController::class, 'staffIndex'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::put('/orders/{order}', [OrderController::class, 'updateStatus'])->name('orders.update');
+    
+    // Customer Management
+    Route::get('/customers', [UserController::class, 'staffCustomersIndex'])->name('customers.index');
+    Route::get('/customers/{user}', [UserController::class, 'staffCustomerShow'])->name('customers.show');
+    Route::get('/customers/{user}/orders', [UserController::class, 'staffCustomerOrders'])->name('customers.orders');
+    
+    // Inventory Management
+    Route::get('/inventory', [ProductController::class, 'staffInventory'])->name('inventory');
 });
 
 Route::post('/products/{id}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
