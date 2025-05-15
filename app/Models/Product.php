@@ -21,4 +21,12 @@ class Product extends Model
         'price' => 'decimal:2',
         'stock' => 'integer'
     ];
+
+    public function getImageUrlAttribute()
+    {
+        if ($this->image) {
+            return asset('storage/' . $this->image);
+        }
+        return asset('images/no-image.png');
+    }
 } 

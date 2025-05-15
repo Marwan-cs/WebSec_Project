@@ -103,6 +103,9 @@ class ProductController extends Controller
     public function shop(Request $request)
     {
         $products = Product::paginate(12);
+        foreach ($products as $product) {
+            $product->image_url = $product->image_url;
+        }
         // Use dummy categories and brands if models do not exist
         $categories = [
             (object)['id' => 1, 'name' => 'Electronics', 'slug' => 'electronics'],
@@ -120,7 +123,11 @@ class ProductController extends Controller
     public function showDetails($id)
     {
         $product = Product::findOrFail($id);
+        $product->image_url = $product->image_url;
         $relatedProducts = Product::where('id', '!=', $id)->take(4)->get();
+        foreach ($relatedProducts as $relatedProduct) {
+            $relatedProduct->image_url = $relatedProduct->image_url;
+        }
         return view('webfront.shop-details', compact('product', 'relatedProducts'));
     }
 } 

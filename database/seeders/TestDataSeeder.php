@@ -96,10 +96,17 @@ class TestDataSeeder extends Seeder
                 ]
             );
 
-            $role = Role::where('name', $userData['role'])->first();
+            $role = Role::where('slug', $userData['role'])->first();
             if ($role) {
-                $user->roles()->sync([$role->id]);
+                $user->roles()->syncWithoutDetaching([$role->id]);
             }
+        }
+
+        // Ensure admin user has admin role
+        $adminUser = \App\Models\User::where('email', 'admin@example.com')->first();
+        $adminRole = \App\Models\Role::where('slug', 'admin')->first();
+        if ($adminUser && $adminRole) {
+            $adminUser->roles()->syncWithoutDetaching([$adminRole->id]);
         }
     }
 } 
