@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@php use Illuminate\Support\Str; @endphp
+
 @section('title', $product->name . ' - E-Commerce Store')
 
 @section('content')

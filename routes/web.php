@@ -14,6 +14,7 @@ use App\Http\Controllers\Staff\DashboardController as StaffDashboardController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ReviewController;
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -169,5 +170,7 @@ Route::middleware(['auth', \App\Http\Middleware\CheckRole::class.':staff'])->pre
         return view('staff.inventory.index');
     })->name('inventory');
 });
+
+Route::post('/products/{id}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 
 require __DIR__.'/auth.php';
