@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">{{ __('Manage Staff') }}</h5>
-                    <a href="#" class="btn btn-primary disabled">Add Staff</a>
+                    <a href="{{ route('manager.staff.create') }}" class="btn btn-primary">Add Staff</a>
                 </div>
                 <div class="card-body">
                     @if (session('success'))
@@ -32,12 +32,12 @@
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->roles->pluck('name')->join(', ') }}</td>
                                         <td>
-                                            <a href="#" class="btn btn-info btn-sm disabled">View</a>
-                                            <a href="#" class="btn btn-primary btn-sm disabled">Edit</a>
-                                            <form action="#" method="POST" class="d-inline">
+                                            <a href="{{ route('manager.staff.show', $user->id) }}" class="btn btn-info btn-sm">View</a>
+                                            <a href="{{ route('manager.staff.edit', $user->id) }}" class="btn btn-primary btn-sm">Edit</a>
+                                            <form action="{{ route('manager.staff.destroy', $user->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm disabled">Delete</button>
+                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
                                             </form>
                                         </td>
                                     </tr>

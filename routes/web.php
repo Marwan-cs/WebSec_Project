@@ -15,6 +15,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\StaffController;
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');

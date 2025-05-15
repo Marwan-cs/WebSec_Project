@@ -15,7 +15,7 @@ class OrderPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasRole(['admin', 'manager', 'staff']);
+        return $user->hasAnyRole(['admin', 'manager', 'staff']);
     }
 
     /**
@@ -23,7 +23,7 @@ class OrderPolicy
      */
     public function view(User $user, Order $order): bool
     {
-        return $user->id === $order->user_id || $user->hasRole(['admin', 'manager', 'staff']);
+        return $user->id === $order->user_id || $user->hasAnyRole(['admin', 'manager', 'staff']);
     }
 
     /**
@@ -39,7 +39,7 @@ class OrderPolicy
      */
     public function update(User $user, Order $order): bool
     {
-        return $user->hasRole(['admin', 'manager', 'staff']);
+        return $user->hasAnyRole(['admin', 'manager', 'staff']);
     }
 
     /**
@@ -47,6 +47,6 @@ class OrderPolicy
      */
     public function delete(User $user, Order $order): bool
     {
-        return $user->hasRole(['admin', 'manager']);
+        return $user->hasAnyRole(['admin', 'manager']);
     }
 } 
