@@ -17,47 +17,84 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TestDataController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\ConfirmablePasswordController;
+use App\Http\Controllers\Auth\EmailVerificationPromptController;
+use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 
-// Public Routes
-Route::get('/', [HomeController::class, 'index'])->name('home');
+// Redirect root to login for guests
+Route::get('/', function() {
+    return redirect()->route('login');
+})->middleware('guest')->name('root');
 
-// Web Pages (public access)
-Route::prefix('')->group(function () {
-    Route::view('/about', 'webfront.about')->name('about');
+// Home and all other pages (require authentication and email verification)
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Home page
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    
+    // Web Pages (protected access)
+    Route::get('/about', [App\Http\Controllers\AboutController::class, 'index'])->name('about');
     Route::view('/blog', 'webfront.blog')->name('blog');
     Route::view('/blog-details', 'webfront.blog-details')->name('blog.details');
     Route::get('/shop', [ProductController::class, 'shop'])->name('shop');
     Route::get('/shop-details/{id}', [ProductController::class, 'showDetails'])->name('shop.details');
     Route::view('/contact', 'webfront.contact')->name('contact');
+    Route::view('/contactform', 'webfront.contactform')->name('contactform');
 });
 
-// Contact Form Route
-Route::view('/contactform', 'webfront.contactform')->name('contactform');
-
 // Authentication Routes
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::middleware('guest')->group(function () {
+    Route::get('register', [RegisteredUserController::class, 'create'])
+        ->name('register');
+    Route::post('register', [RegisteredUserController::class, 'store']);
+    Route::get('login', [AuthenticatedSessionController::class, 'create'])
+        ->name('login');
+    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
+        ->name('password.request');
+    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+        ->name('password.email');
+    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
+        ->name('password.reset');
+    Route::post('reset-password', [NewPasswordController::class, 'store'])
+        ->name('password.update');
+});
 
-// Email Verification Routes
-Route::get('/email/verify', [AuthController::class, 'showVerifyEmail'])->name('verification.notice')->middleware('auth');
-Route::post('/email/verification-notification', [AuthController::class, 'resendVerificationEmail'])->name('verification.send')->middleware(['auth', 'throttle:6,1']);
-Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify')->middleware(['auth', 'signed', 'throttle:6,1']);
+// Email verification routes
+Route::get('verify-email', [EmailVerificationPromptController::class, '__invoke'])
+    ->middleware('auth')
+    ->name('verification.notice');
 
-// Password Reset Routes
-Route::get('/password/reset', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
-Route::post('/password/email', [AuthController::class, 'sendResetLinkEmail'])->name('password.email');
-Route::get('/password/reset/{token}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset');
-Route::post('/password/reset', [AuthController::class, 'resetPassword'])->name('password.update');
+Route::get('verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
+    ->middleware(['auth', 'signed', 'throttle:6,1'])
+    ->name('verification.verify');
+
+Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
+    ->middleware(['auth', 'throttle:6,1'])
+    ->name('verification.send');
+
+// Password confirmation routes
+Route::middleware('auth')->group(function () {
+    Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
+        ->name('password.confirm');
+    Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
+    Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+        ->name('logout');
+});
 
 // Socialite Routes
 Route::get('/auth/{provider}/redirect', [SocialiteController::class, 'redirectToProvider'])->name('socialite.redirect');
 Route::get('/auth/{provider}/callback', [SocialiteController::class, 'handleProviderCallback'])->name('socialite.callback');
 
-// Customer Routes (requires authentication)
-Route::middleware(['auth'])->group(function () {
+// Customer Routes (requires authentication and email verification)
+Route::middleware(['auth', 'verified'])->group(function () {
     // Shopping Cart
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
@@ -146,14 +183,15 @@ Route::middleware(['auth', \App\Http\Middleware\CheckRole::class.':admin'])->pre
 // Manager routes
 Route::middleware(['auth', \App\Http\Middleware\CheckRole::class.':manager'])->prefix('manager')->name('manager.')->group(function () {
     Route::get('/dashboard', [ManagerDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/sales-data', [ManagerDashboardController::class, 'getSalesDataForPeriod'])->name('dashboard.sales-data');
     Route::resource('products', ProductController::class);
     Route::resource('staff', StaffController::class);
-    Route::get('/reports/sales', function () {
-        return view('manager.reports.sales');
-    })->name('reports.sales');
-    Route::get('/reports/inventory', function () {
-        return view('manager.reports.inventory');
-    })->name('reports.inventory');
+    Route::get('/reports/sales', [OrderController::class, 'salesReport'])->name('reports.sales');
+    Route::get('/reports/inventory', [ProductController::class, 'inventoryReport'])->name('reports.inventory');
+    
+    // Comment out PDF export routes until they're properly implemented
+    // Route::get('/reports/sales/pdf', [OrderController::class, 'salesReportPdf'])->name('reports.sales.pdf');
+    // Route::get('/reports/inventory/pdf', [ProductController::class, 'inventoryReportPdf'])->name('reports.inventory.pdf');
 });
 
 // Staff routes
@@ -173,5 +211,14 @@ Route::middleware(['auth', \App\Http\Middleware\CheckRole::class.':staff'])->pre
 });
 
 Route::post('/products/{id}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+
+// Test Data routes - FOR DEVELOPMENT ONLY
+Route::get('/test-data', [TestDataController::class, 'index'])->name('test-data');
+Route::get('/generate-test-data', [TestDataController::class, 'generateData'])->name('generate-test-data');
+
+// Add this route near the end of the file, before any route groups
+Route::get('/test-charts', function() {
+    return view('test-charts');
+});
 
 require __DIR__.'/auth.php';
