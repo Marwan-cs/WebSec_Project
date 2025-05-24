@@ -6,8 +6,143 @@
 @section('title', 'Shop - E-Commerce Store')
 
 @section('content')
+<style>
+    body {
+        background: #f8f9fa;
+    }
+    .shop-header {
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 18px rgba(99,108,113,0.08);
+        padding: 32px 24px 24px 24px;
+        margin-bottom: 32px;
+    }
+    .shop-header h1 {
+        color: #333;
+        font-weight: 800;
+        letter-spacing: 1px;
+    }
+    .dropdown .btn {
+        border-radius: 8px;
+        font-weight: 600;
+    }
+    .btn-group .btn {
+        border-radius: 8px !important;
+    }
+    .card {
+        border-radius: 18px;
+        box-shadow: 0 2px 12px rgba(99,108,113,0.07);
+        border: none;
+        transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .card:hover {
+        box-shadow: 0 8px 32px rgba(99,108,113,0.13);
+        transform: translateY(-4px) scale(1.01);
+    }
+    .card-title {
+        font-weight: 700;
+        color: #222;
+    }
+    .card-text {
+        color: #666;
+        font-size: 0.98rem;
+    }
+    .badge.bg-danger {
+        background: #e74c3c !important;
+        font-size: 0.95rem;
+        padding: 0.5em 1em;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+    .btn-primary, .btn-success, .btn-warning, .btn-danger {
+        border-radius: 8px;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(99,108,113,0.07);
+        transition: background 0.2s, color 0.2s;
+    }
+    .btn-primary {
+        background: #e7ab3c;
+        border: none;
+        color: #fff;
+    }
+    .btn-primary:hover {
+        background: #ffd700;
+        color: #333;
+    }
+    .btn-outline-primary {
+        border-radius: 8px;
+        color: #e7ab3c;
+        border: 1.5px solid #e7ab3c;
+        font-weight: 600;
+    }
+    .btn-outline-primary:hover {
+        background: #e7ab3c;
+        color: #fff;
+    }
+    .btn-outline-secondary {
+        border-radius: 8px;
+        font-weight: 600;
+    }
+    .add-to-cart {
+        background: #333;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        transition: background 0.2s;
+    }
+    .add-to-cart:hover {
+        background: #e7ab3c;
+        color: #fff;
+    }
+    .list-group-item.active {
+        background: #e7ab3c;
+        border-color: #e7ab3c;
+        color: #fff;
+        font-weight: 700;
+    }
+    .list-group-item {
+        border-radius: 8px !important;
+        margin-bottom: 6px;
+        font-weight: 500;
+        color: #333;
+    }
+    .form-control, .form-check-input {
+        border-radius: 8px;
+    }
+    .form-check-label {
+        font-weight: 500;
+        color: #444;
+    }
+    .card-img-top {
+        border-radius: 14px 14px 0 0;
+        object-fit: cover;
+        height: 220px;
+        background: #f8f9fa;
+    }
+    .btn-group .btn {
+        margin-right: 4px;
+    }
+    .btn-group .btn:last-child {
+        margin-right: 0;
+    }
+    .pagination .page-link {
+        border-radius: 8px !important;
+        color: #e7ab3c;
+        font-weight: 600;
+    }
+    .pagination .page-item.active .page-link {
+        background: #e7ab3c;
+        border-color: #e7ab3c;
+        color: #fff;
+    }
+    @media (max-width: 991px) {
+        .card-img-top {
+            height: 160px;
+        }
+    }
+</style>
     <!-- Shop Header -->
-    <div class="bg-light py-4 mb-4">
+    <div class="shop-header bg-light py-4 mb-4">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6">

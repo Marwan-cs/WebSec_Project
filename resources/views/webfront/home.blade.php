@@ -1,10 +1,127 @@
 @extends('layouts.app')
 
-@section('title', 'Home - E-Commerce Store')
+@section('title', 'Home - HAM Store')
 
 @section('content')
+<style>
+    .hero-section {
+        background: #fff;
+        color: #333;
+        border-radius: 24px;
+        box-shadow: 0 6px 32px rgba(99,108,113,0.10);
+        padding: 60px 0 40px 0;
+        margin-bottom: 48px;
+    }
+    .hero-section h1 {
+        font-weight: 900;
+        font-size: 2.8rem;
+        margin-bottom: 18px;
+        letter-spacing: 1px;
+        color: #222;
+    }
+    .hero-section p.lead {
+        font-size: 1.25rem;
+        margin-bottom: 28px;
+        color: #444;
+    }
+    .hero-section .btn {
+        font-size: 1.15rem;
+        font-weight: 700;
+        border-radius: 10px;
+        padding: 14px 36px;
+        background: #ffd700;
+        color: #333;
+        border: none;
+        transition: background 0.2s, color 0.2s;
+        box-shadow: 0 2px 12px rgba(99,108,113,0.08);
+    }
+    .hero-section .btn:hover {
+        background: #e7ab3c;
+        color: #fff;
+    }
+    .hero-section img {
+        border-radius: 18px;
+        box-shadow: 0 4px 18px rgba(99,108,113,0.10);
+    }
+    .card {
+        border-radius: 18px;
+        box-shadow: 0 2px 12px rgba(99,108,113,0.07);
+        border: none;
+        transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .card:hover {
+        box-shadow: 0 8px 32px rgba(99,108,113,0.13);
+        transform: translateY(-4px) scale(1.01);
+    }
+    .card-title {
+        font-weight: 700;
+        color: #222;
+    }
+    .btn-outline-primary {
+        border-radius: 8px;
+        color: #e7ab3c;
+        border: 1.5px solid #e7ab3c;
+        font-weight: 600;
+        transition: background 0.2s, color 0.2s;
+    }
+    .btn-outline-primary:hover {
+        background: #e7ab3c;
+        color: #fff;
+    }
+    .btn-primary {
+        background: #e7ab3c;
+        border: none;
+        color: #fff;
+        border-radius: 8px;
+        font-weight: 700;
+        transition: background 0.2s, color 0.2s;
+    }
+    .btn-primary:hover {
+        background: #ffd700;
+        color: #333;
+    }
+    .card-img-top {
+        border-radius: 14px 14px 0 0;
+        object-fit: cover;
+        height: 210px;
+        background: #f8f9fa;
+    }
+    .featured-products .card-img-top {
+        height: 180px;
+    }
+    .list-unstyled li i {
+        color: #27ae60;
+    }
+    .testimonials-section .card {
+        border-radius: 18px;
+        background: #fffbea;
+        border: none;
+        box-shadow: 0 2px 12px rgba(99,108,113,0.07);
+    }
+    .testimonials-section .card-body {
+        padding-bottom: 18px;
+    }
+    .testimonials-section .rounded-circle {
+        border: 3px solid #ffd700;
+    }
+    .testimonials-section h5 {
+        color: #e7ab3c;
+        font-weight: 700;
+    }
+    .testimonials-section .text-warning i {
+        color: #e7ab3c !important;
+    }
+    @media (max-width: 991px) {
+        .hero-section img {
+            margin-top: 24px;
+        }
+        .card-img-top, .featured-products .card-img-top {
+            height: 140px;
+        }
+    }
+</style>
     <!-- Hero Section -->
-    <div class="bg-primary text-white py-5 mb-5">
+    <div class="hero-section py-5 mb-5">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6">

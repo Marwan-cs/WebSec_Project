@@ -1,14 +1,15 @@
 @php
 use Illuminate\Support\Facades\Auth;
+use App\Models\Cart;
 @endphp
 
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="Male_Fashion Template">
-    <meta name="keywords" content="Male_Fashion, unica, creative, html">
+    <meta name="description" content="HAM Store - Your Fashion Destination">
+    <meta name="keywords" content="HAM Store, fashion, clothing, accessories">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -16,6 +17,9 @@ use Illuminate\Support\Facades\Auth;
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- Css Styles -->
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" type="text/css">
@@ -26,6 +30,184 @@ use Illuminate\Support\Facades\Auth;
     <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('css/slicknav.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
+
+    <style>
+        :root {
+            --primary-color:rgb(99, 108, 113);
+            --secondary-color: #ffd700;
+            --text-color: #333333;
+            --light-text: #666666;
+            --white: #ffffff;
+            --light-bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            color: var(--text-color);
+            background: var(--white);
+        }
+
+        .navbar {
+            padding: 1rem 0;
+            background: var(--white) !important;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color) !important;
+        }
+
+        .navbar-brand i {
+            margin-right: 8px;
+        }
+
+        .nav-link {
+            color: var(--text-color) !important;
+            font-weight: 600;
+            padding: 0.5rem 1rem !important;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .header__top {
+            background: var(--light-bg);
+            padding: 10px 0;
+            font-size: 14px;
+        }
+
+        .header__top__left p {
+            margin: 0;
+            color: var(--light-text);
+        }
+
+        .header__top__links a {
+            color: var(--light-text);
+            text-decoration: none;
+            margin-left: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .header__top__links a:hover {
+            color: var(--primary-color);
+        }
+
+        .header__top__links button {
+            background: none;
+            border: none;
+            color: var(--light-text);
+            margin-left: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .header__top__links button:hover {
+            color: var(--primary-color);
+        }
+
+        main {
+            min-height: calc(100vh - 300px);
+            padding: 40px 0;
+        }
+
+        .alert {
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        footer {
+            background: var(--white);
+            padding: 60px 0 20px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+        }
+
+        footer h5 {
+            color: var(--text-color);
+            font-weight: 700;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        footer h5:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        }
+
+        footer p {
+            color: var(--light-text);
+            line-height: 1.8;
+        }
+
+        footer ul li {
+            margin-bottom: 12px;
+        }
+
+        footer ul li a {
+            color: var(--light-text);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        footer ul li a:hover {
+            color: var(--primary-color);
+            padding-left: 5px;
+        }
+
+        footer ul li i {
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+
+        hr {
+            margin: 30px 0;
+            border-color: rgba(0,0,0,0.1);
+        }
+
+        .text-center p {
+            margin: 0;
+            color: var(--light-text);
+        }
+
+        @media (max-width: 767px) {
+            .header__top__left {
+                text-align: center;
+                margin-bottom: 10px;
+            }
+            .header__top__right {
+                text-align: center;
+            }
+            .header__top__links {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .header__top__links a,
+            .header__top__links button {
+                margin: 5px 0;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -57,23 +239,10 @@ use Illuminate\Support\Facades\Auth;
                         <button type="submit" style="background: none; border: none; color: #e53637; padding: 0; margin-right: 15px;">Logout</button>
                     </form>
                 @endguest
-                <a href="#">FAQs</a>
             </div>
-            <div class="offcanvas__top__hover">
-                <span>Usd <i class="arrow_carrot-down"></i></span>
-                <ul>
-                    <li>USD</li>
-                    <li>EUR</li>
-                    <li>USD</li>
-                </ul>
-            </div>
+
         </div>
-        <div class="offcanvas__nav__option">
-            <a href="#" class="search-switch"><img src="{{ asset('img/icon/search.png') }}" alt=""></a>
-            <a href="#"><img src="{{ asset('img/icon/heart.png') }}" alt=""></a>
-            <a href="#"><img src="{{ asset('img/icon/cart.png') }}" alt=""> <span>0</span></a>
-            <div class="price">$0.00</div>
-        </div>
+      
         <div id="mobile-menu-wrap"></div>
         <div class="offcanvas__text">
             <p>Free shipping, 30-day return or refund guarantee.</p>
@@ -112,107 +281,125 @@ use Illuminate\Support\Facades\Auth;
                                         <button type="submit" style="background: none; border: none; color: #e53637; padding: 0; margin-right: 15px;">Logout</button>
                                     </form>
                                 @endguest
-                                <a href="#">FAQs</a>
+                                <!-- <a href="#">FAQs</a> -->
                             </div>
-                            <div class="header__top__hover">
-                                <span>Usd <i class="arrow_carrot-down"></i></span>
-                                <ul>
-                                    <li>USD</li>
-                                    <li>EUR</li>
-                                    <li>USD</li>
-                                </ul>
-                            </div>
+                          
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+     <!-- Navigation -->
+     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-3">
-                    <div class="header__logo">
-                        <a href="{{ url('/') }}"><img src="{{ asset('img/logo.png') }}" alt=""></a>
-                    </div>
+            <a class="navbar-brand" href="{{ route('home') }}">
+                <img src="{{ asset('img/logo.png') }}" alt="HAM Store Logo" style="height: 38px; margin-right: 10px; display: inline-block; vertical-align: middle;">
+                HAM Store
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('shop') }}">Shop</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('about') }}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('contact') }}">Contact</a>
+                    </li>
+                </ul>
+              
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
                 </div>
-                <div class="col-lg-6 col-md-6">
-                    <nav class="header__menu mobile-menu">
-                        <ul>
-                            <li class="active"><a href="{{ url('/') }}">Home</a></li>
-                            <li><a href="{{ url('/shop') }}">Shop</a></li>
-                            <li><a href="#">Pages</a>
-                                <ul class="dropdown">
-                                    <li><a href="{{ url('/about') }}">About Us</a></li>
-                                    <li><a href="{{ url('/shop-details') }}">Shop Details</a></li>
-                                    <li><a href="{{ url('/shopping-cart') }}">Shopping Cart</a></li>
-                                    <li><a href="{{ url('/checkout') }}">Check Out</a></li>
-                                    <li><a href="{{ url('/blog-details') }}">Blog Details</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="{{ url('/blog') }}">Blog</a></li>
-                            <li><a href="{{ url('/contact') }}">Contacts</a></li>
-                        </ul>
-                    </nav>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
                 </div>
-                <div class="col-lg-3 col-md-3">
-                    <div class="header__nav__option">
-                        <a href="#" class="search-switch"><img src="{{ asset('img/icon/search.png') }}" alt=""></a>
-                        <a href="#"><img src="{{ asset('img/icon/heart.png') }}" alt=""></a>
-                        <a href="#"><img src="{{ asset('img/icon/cart.png') }}" alt=""> <span>0</span></a>
-                        <div class="price">$0.00</div>
-                    </div>
-                </div>
+            @endif
+
+            @yield('content')
+        </div>
+    </main>
             </div>
             <div class="canvas__open"><i class="fa fa-bars"></i></div>
         </div>
     </header>
     <!-- Header Section End -->
 
-    @yield('content')
-
     <!-- Footer Section Begin -->
     <footer class="footer">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="footer__about">
-                        <div class="footer__logo">
-                            <a href="#"><img src="{{ asset('img/footer-logo.png') }}" alt=""></a>
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer__widget">
+                        <h4>About HAM Store</h4>
+                        <p>Your premier destination for fashion and style. We bring you the latest trends and highest quality products to express your unique style.</p>
+                        <div class="footer__social">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
                         </div>
-                        <p>The customer is at the heart of our unique business model, which includes design.</p>
-                        <a href="#"><img src="{{ asset('img/payment.png') }}" alt=""></a>
                     </div>
                 </div>
-                <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
+                <div class="col-lg-2 col-md-3">
                     <div class="footer__widget">
-                        <h6>Shopping</h6>
-                        <ul>
-                            <li><a href="#">Clothing Store</a></li>
-                            <li><a href="#">Trending Shoes</a></li>
-                            <li><a href="#">Accessories</a></li>
-                            <li><a href="#">Sale</a></li>
+                        <h4>Quick Links</h4>
+                        <ul class="footer__links">
+                            <li><a href="/home">Home</a></li>
+                            <li><a href="/shop">Shop</a></li>
+                            <li><a href="/about">About Us</a></li>
+                            <li><a href="contact">Contact</a></li>
+                            <!-- <li><a href="#">Blog</a></li> -->
                         </ul>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-3 col-sm-6">
+                <div class="col-lg-3 col-md-3">
                     <div class="footer__widget">
-                        <h6>Shopping</h6>
-                        <ul>
-                            <li><a href="#">Contact Us</a></li>
-                            <li><a href="#">Payment Methods</a></li>
-                            <li><a href="#">Delivery</a></li>
-                            <li><a href="#">Return & Exchanges</a></li>
+                        <h4>Contact Info</h4>
+                        <ul class="footer__contact">
+                            <li><i class="fas fa-map-marker-alt"></i> Cairo, Egypt</li>
+                            <li><i class="fas fa-phone"></i>15755</li>
+                            <li><i class="fas fa-envelope"></i> info@hamstore.com</li>
+                            <li><i class="fas fa-clock"></i> Sun-Thu: 9:00 AM - 6:00 PM</li>
                         </ul>
                     </div>
                 </div>
-                <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
+                <div class="col-lg-3 col-md-6">
                     <div class="footer__widget">
-                        <h6>Newsletter</h6>
-                        <div class="footer__newslatter">
-                            <p>Be the first to know about new arrivals, look books, sales & promos!</p>
-                            <form action="#">
-                                <input type="text" placeholder="Your email">
-                                <button type="submit"><span class="icon_mail_alt"></span></button>
-                            </form>
+                        <h4>Newsletter</h4>
+                        <p>Subscribe to our newsletter for the latest updates and offers.</p>
+                        <form class="footer__newsletter">
+                            <input type="email" placeholder="Your email address">
+                            <button type="submit">Subscribe</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="footer__copyright">
+                        <div class="footer__copyright__text">
+                            <p>Copyright © 2025 HAM Store. All rights reserved.</p>
+                        </div>
+                        <div class="footer__copyright__payment">
+                            <img src="img/payment3.png" alt="Payment Methods">
                         </div>
                     </div>
                 </div>
@@ -232,8 +419,8 @@ use Illuminate\Support\Facades\Auth;
     </div>
     <!-- Search End -->
 
-    <!-- Js Plugins -->
-    <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
+    <!-- Js Plugins  -->
+    <!-- <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/jquery.nice-select.min.js') }}"></script>
     <script src="{{ asset('js/jquery.nicescroll.min.js') }}"></script>
@@ -243,8 +430,8 @@ use Illuminate\Support\Facades\Auth;
     <script src="{{ asset('js/mixitup.min.js') }}"></script>
     <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
-    
-    <!-- CSRF Token Setup -->
+     -->
+    <!-- CSRF Token Setup
     <script>
         $.ajaxSetup({
             headers: {
